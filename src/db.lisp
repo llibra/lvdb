@@ -1,0 +1,15 @@
+(in-package :lvdb.db)
+
+(defun open (opt name)
+  (with-foreign-string (name-ptr name)
+    (with-foreign-object (err-ptr :pointer)
+      (setf (mem-aref err-ptr :pointer) (null-pointer))
+      (let ((db (leveldb-open opt name-ptr err-ptr)))
+        (if (null-pointer-p db)
+            (let ((ptr (mem-aref err-ptr :pointer)))
+              (unwind-protect (error (foreign-string-to-lisp ptr))
+                (free ptr)))
+            db)))))
+
+(defun close (db)
+  (leveldb-close db))
