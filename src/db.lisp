@@ -17,9 +17,11 @@
     (with-error-pointer (err-ptr)
       (let ((val-ptr (leveldb-get db opt key-fs key-len val-len-ptr err-ptr)))
         (handle-error-pointer err-ptr)
-        (with-malloced-pointer (val-ptr)
-          (let ((val-len (mem-aref val-len-ptr 'size_t)))
-            (foreign-string->x as val-ptr val-len)))))))
+        (if (null-pointer-p val-ptr)
+            (values nil nil)
+            (with-malloced-pointer (val-ptr)
+              (let ((val-len (mem-aref val-len-ptr 'size_t)))
+                (values (foreign-string->x as val-ptr val-len) t))))))))
 
 (in-package :lvdb.db)
 
