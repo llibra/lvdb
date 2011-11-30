@@ -1,3 +1,20 @@
+(in-package :lvdb.db.fs)
+
+(defun put (db opt key-fs key-len val-fs val-len)
+  (with-error-pointer (err-ptr)
+    (leveldb-put db opt key-fs key-len val-fs val-len err-ptr)
+    (handle-error-pointer err-ptr)
+    (values)))
+
+(defun get (db opt key-fs key-len)
+  (with-foreign-object (val-len-ptr 'size_t)
+    (with-error-pointer (err-ptr)
+      (let ((val-ptr (leveldb-get db opt key-fs key-len val-len-ptr err-ptr)))
+        (handle-error-pointer err-ptr)
+        (with-malloced-pointer (val-ptr)
+          (let ((val-len (mem-aref val-len-ptr 'size_t)))
+            (foreign-string-to-lisp val-ptr :count val-len)))))))
+
 (in-package :lvdb.db)
 
 (defun open (opt name)
@@ -13,3 +30,12 @@
 
 (defun close (db)
   (leveldb-close db))
+
+(defun put (db opt key val)
+  (with-foreign-strings (((key-fs key-len) key :null-terminated-p nil)
+                         ((val-fs val-len) val :null-terminated-p nil))
+    (lvdb.db.fs:put db opt key-fs key-len val-fs val-len)))
+
+(defun get (db opt key)
+  (with-foreign-string ((key-fs key-len) key :null-terminated-p nil)
+    (lvdb.db.fs:get db opt key-fs key-len)))

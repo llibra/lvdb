@@ -1,20 +1,53 @@
 (defpackage :leveldb.ffi
   (:nicknames :lvdb.ffi)
   (:use :cl :cffi)
-  (:export :free
+  (:export :size_t
+
+           :free
 
            :leveldb-options-create :leveldb-options-destroy
            :leveldb-options-set-create-if-missing
-           :leveldb-open :leveldb-close))
+
+           :leveldb-writeoptions-create :leveldb-writeoptions-destroy
+           :leveldb-writeoptions-set-sync
+
+           :leveldb-readoptions-create :leveldb-readoptions-destroy
+           :leveldb-readoptions-set-verify-checksums
+           :leveldb-readoptions-set-fill-cache
+
+           :leveldb-open :leveldb-close :leveldb-put :leveldb-get))
+
+(defpackage :leveldb.utilities
+  (:nicknames :leveldb.util :lvdb.util)
+  (:use :cl :cffi :lvdb.ffi)
+  (:export :with-error-pointer :with-malloced-pointer :handle-error-pointer))
 
 (defpackage :leveldb.options
-  (:nicknames :lvdb.opt)
+  (:nicknames :leveldb.opt :lvdb.opt)
   (:use :cl :cffi :lvdb.ffi)
   (:shadow :set)
   (:export :set :create :destroy :with-options))
 
-(defpackage :leveldb.database
-  (:nicknames :lvdb.db)
+(defpackage :leveldb.write-options
+  (:nicknames :leveldb.writeopt :lvdb.writeopt :lvdb.wopt)
   (:use :cl :cffi :lvdb.ffi)
-  (:shadow :open :close)
-  (:export :open :close))
+  (:shadow :set)
+  (:export :set :create :destroy :with-write-options))
+
+(defpackage :leveldb.read-options
+  (:nicknames :leveldb.readopt :lvdb.readopt :lvdb.ropt)
+  (:use :cl :cffi :lvdb.ffi)
+  (:shadow :set)
+  (:export :set :create :destroy :with-read-options))
+
+(defpackage :leveldb.database
+  (:nicknames :leveldb.db :lvdb.db)
+  (:use :cl :cffi :lvdb.ffi :lvdb.util)
+  (:shadow :close :get :open)
+  (:export :open :close :put :get))
+
+(defpackage :leveldb.database.foreign-string
+  (:nicknames :leveldb.db.fs :lvdb.db.fs)
+  (:use :cl :cffi :lvdb.ffi :lvdb.util)
+  (:shadow :get)
+  (:export :put :get))

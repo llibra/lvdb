@@ -11,5 +11,6 @@
                         :serial t
                         :components ((:file "packages")
                                      (:file "ffi")
-                                     (:file "options")
+                                     (:file "util")
+                                     (:file "opt")
                                      (:file "db")))))
