@@ -6,6 +6,12 @@
     (handle-error-pointer err-ptr)
     (values)))
 
+(defun delete (db opt key-fs key-len)
+  (with-error-pointer (err-ptr)
+    (leveldb-delete db opt key-fs key-len err-ptr)
+    (handle-error-pointer err-ptr)
+    (values)))
+
 (defun get (db opt key-fs key-len &key (as 'string))
   (with-foreign-object (val-len-ptr 'size_t)
     (with-error-pointer (err-ptr)
@@ -30,6 +36,10 @@
   (with-alloced-foreign-strings ((key-fs key-len (x->foreign-string key))
                                  (val-fs val-len (x->foreign-string val)))
     (lvdb.db.fs:put db opt key-fs key-len val-fs val-len)))
+
+(defun delete (db opt key)
+  (with-alloced-foreign-string (key-fs key-len (x->foreign-string key))
+    (lvdb.db.fs:delete db opt key-fs key-len)))
 
 (defun get (db opt key &rest args)
   (with-alloced-foreign-string (key-fs key-len (x->foreign-string key))

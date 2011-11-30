@@ -55,6 +55,13 @@
   (vallen size_t)
   (errptr :pointer))
 
+(defcfun "leveldb_delete" :void
+  (db :pointer)
+  (options :pointer)
+  (key :pointer)
+  (keylen size_t)
+  (errptr :pointer))
+
 (defcfun "leveldb_get" :pointer
   (db :pointer)
   (options :pointer)

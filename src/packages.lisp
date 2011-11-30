@@ -15,7 +15,8 @@
            :leveldb-readoptions-set-verify-checksums
            :leveldb-readoptions-set-fill-cache
 
-           :leveldb-open :leveldb-close :leveldb-put :leveldb-get))
+           :leveldb-open :leveldb-close :leveldb-put :leveldb-delete
+           :leveldb-get))
 
 (defpackage :leveldb.utilities
   (:nicknames :leveldb.util :lvdb.util)
@@ -49,11 +50,11 @@
 (defpackage :leveldb.database
   (:nicknames :leveldb.db :lvdb.db)
   (:use :cl :cffi :lvdb.ffi :lvdb.util :lvdb.conv)
-  (:shadow :close :get :open)
-  (:export :open :close :put :get))
+  (:shadow :open :close :delete :get)
+  (:export :open :close :put :delete :get))
 
 (defpackage :leveldb.database.foreign-string
   (:nicknames :leveldb.db.fs :lvdb.db.fs)
   (:use :cl :cffi :lvdb.ffi :lvdb.util :lvdb.conv)
-  (:shadow :get)
-  (:export :put :get))
+  (:shadow :delete :get)
+  (:export :put :delete :get))
