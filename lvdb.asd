@@ -12,5 +12,6 @@
                         :components ((:file "packages")
                                      (:file "ffi")
                                      (:file "util")
+                                     (:file "conv")
                                      (:file "opt")
                                      (:file "db")))))

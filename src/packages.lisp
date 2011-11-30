@@ -20,7 +20,13 @@
 (defpackage :leveldb.utilities
   (:nicknames :leveldb.util :lvdb.util)
   (:use :cl :cffi :lvdb.ffi)
-  (:export :with-error-pointer :with-malloced-pointer :handle-error-pointer))
+  (:export :with-error-pointer :with-malloced-pointer :handle-error-pointer
+           :with-alloced-foreign-string :with-alloced-foreign-strings))
+
+(defpackage :leveldb.conversion
+  (:nicknames :leveldb.conv :lvdb.conv)
+  (:use :cl :cffi :lvdb.ffi)
+  (:export :x->foreign-string :foreign-string->x))
 
 (defpackage :leveldb.options
   (:nicknames :leveldb.opt :lvdb.opt)
@@ -42,12 +48,12 @@
 
 (defpackage :leveldb.database
   (:nicknames :leveldb.db :lvdb.db)
-  (:use :cl :cffi :lvdb.ffi :lvdb.util)
+  (:use :cl :cffi :lvdb.ffi :lvdb.util :lvdb.conv)
   (:shadow :close :get :open)
   (:export :open :close :put :get))
 
 (defpackage :leveldb.database.foreign-string
   (:nicknames :leveldb.db.fs :lvdb.db.fs)
-  (:use :cl :cffi :lvdb.ffi :lvdb.util)
+  (:use :cl :cffi :lvdb.ffi :lvdb.util :lvdb.conv)
   (:shadow :get)
   (:export :put :get))
